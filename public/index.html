@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>KXMS — Official Music</title>
+
+  <link
+    rel="stylesheet"
+    href="/style.css"
+  >
+</head>
+
+<body>
+
+  <header class="header">
+
+    <div class="logo">
+      KXMS
+    </div>
+
+    <nav>
+      <a href="/">Music</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <p class="eyebrow">
+        OFFICIAL MUSIC
+      </p>
+
+      <h1>KXMS</h1>
+
+      <p>
+        Listen to the latest music directly
+        from KXMS.
+      </p>
+
+    </section>
+
+
+    <section class="music-section">
+
+      <div class="section-header">
+
+        <h2>Music</h2>
+
+        <span id="count">
+          Loading...
+        </span>
+
+      </div>
+
+
+      <div
+        id="tracks"
+        class="track-grid"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <div class="player">
+
+    <div class="current-track">
+
+      <strong id="now">
+        Select a song
+      </strong>
+
+      <small id="artist">
+        KXMS
+      </small>
+
+    </div>
+
+
+    <audio
+      id="audio"
+      controls
+    ></audio>
+
+  </div>
+
+
+  <script src="/app.js"></script>
+
+</body>
+
+</html>
