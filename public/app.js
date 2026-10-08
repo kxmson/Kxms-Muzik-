@@ -48,7 +48,7 @@ const comingSoonTracks =
       `${tracks.length} release${tracks.length === 1 ? "" : "s"}`;
 
 
-    if (tracks.length === 0) {
+    if (releasedtracks.length === 0) {
 
       featured.innerHTML = `
         <div class="featured-cover">
@@ -62,7 +62,7 @@ const comingSoonTracks =
           </p>
 
           <h2>
-            New Music
+            No Released Music
           </h2>
 
           <p>
