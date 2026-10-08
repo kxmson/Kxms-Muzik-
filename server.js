@@ -326,7 +326,60 @@ app.get(
   }
 );
 
+app.patch(
+  "/api/admin/tracks/:id/status",
 
+  adminAuth,
+
+  (req, res) => {
+
+    const tracks =
+      getTracks();
+
+    const track =
+      tracks.find(
+        item =>
+          item.id ===
+          req.params.id
+      );
+
+    if (!track) {
+
+      return res
+        .status(404)
+        .json({
+          error:
+            "Track not found"
+        });
+
+    }
+
+    const status =
+      req.body.status;
+
+    if (
+      status !== "released" &&
+      status !== "coming-soon"
+    ) {
+
+      return res
+        .status(400)
+        .json({
+          error:
+            "Invalid release status"
+        });
+
+    }
+
+    track.status =
+      status;
+
+    saveTracks(tracks);
+
+    res.json(track);
+
+  }
+);
 app.delete(
   "/api/admin/tracks/:id",
 
