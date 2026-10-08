@@ -1,10 +1,17 @@
-const tracksBox = document.getElementById("tracks");
+const tracksBox =
+  document.getElementById("tracks");
+
 const comingSoonBox =
   document.getElementById("comingSoon");
+
 const comingSoonSection =
   document.getElementById("comingSoonSection");
-const audio = document.getElementById("audio");
-const count = document.getElementById("count");
+
+const audio =
+  document.getElementById("audio");
+
+const count =
+  document.getElementById("count");
 
 const playerTitle =
   document.getElementById("playerTitle");
@@ -31,24 +38,35 @@ async function loadTracks() {
 
     tracks =
       await response.json();
-    const releasedTracks =
-  tracks.filter(
-    track =>
-      track.status !== "coming-soon"
-  );
 
-const comingSoonTracks =
-  tracks.filter(
-    track =>
-      track.status === "coming-soon"
-  );
+    const releasedTracks =
+      tracks.filter(
+        track =>
+          track.status !== "coming-soon"
+      );
+
+    const comingSoonTracks =
+      tracks.filter(
+        track =>
+          track.status === "coming-soon"
+      );
 
 
     count.textContent =
-      `${tracks.length} release${tracks.length === 1 ? "" : "s"}`;
+      `${releasedTracks.length} release${
+        releasedTracks.length === 1
+          ? ""
+          : "s"
+      }`;
 
 
-    if (releasedtracks.length === 0) {
+    if (releasedTracks.length > 0) {
+
+      setupFeaturedTrack(
+        releasedTracks[0]
+      );
+
+    } else {
 
       featured.innerHTML = `
         <div class="featured-cover">
@@ -62,117 +80,38 @@ const comingSoonTracks =
           </p>
 
           <h2>
-            No Released Music
+            Upcoming Music
           </h2>
 
           <p>
-            KXMS releases will appear here.
+            New KXMS music is on the way.
           </p>
 
         </div>
       `;
 
-
-      tracksBox.innerHTML = `
-        <div class="empty">
-          Music is coming soon.
-        </div>
-      `;
-
-      return;
     }
 
-if (releasedTracks.length > 0) {
 
-  setupFeaturedTrack(
-    releasedTracks[0]
-  );
+    renderTracks(
+      releasedTracks
+    );
 
-} else {
 
-  featured.innerHTML = `
-    <div class="featured-cover">
-      <span>KXMS</span>
-    </div>
+    renderComingSoon(
+      comingSoonTracks
+    );
 
-    <div class="featured-info">
-
-      <p class="eyebrow">
-        COMING SOON
-      </p>
-
-      <h2>
-        Upcoming Music
-      </h2>
-
-      <p>
-        New KXMS music is on the way.
-      </p>
-
-    </div>
-  `;
-
-}
-
-renderTracks(releasedTracks);
-
-renderComingSoon(comingSoonTracks);
-
-  if (!upcomingTracks.length) {
-    comingSoonSection.style.display = "none";
-    return;
-  }
-
-  comingSoonSection.style.display = "block";
-
-  comingSoonBox.innerHTML =
-    upcomingTracks.map(track => {
-
-      const artwork =
-        track.artworkUrl
-          ? `
-            <img
-              src="${track.artworkUrl}"
-              alt="${escapeHtml(track.title)}"
-            >
-          `
-          : `
-            <span>KXMS</span>
-          `;
-
-      return `
-        <article class="card">
-
-          <div class="cover">
-            ${artwork}
-          </div>
-
-          <h3>
-            ${escapeHtml(track.title)}
-          </h3>
-
-          <p>
-            ${escapeHtml(track.artist)}
-          </p>
-
-          <button
-            onclick="playTrack('${track.id}')"
-          >
-            ▶ Preview
-          </button>
-
-        </article>
-      `;
-
-    }).join("");
-}
-    renderComingSoon(ComingSoonTracks);
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "KXMS music error:",
+      error
+    );
 
-    count.textContent = "";
+    count.textContent =
+      "";
 
     tracksBox.innerHTML = `
       <div class="empty">
@@ -185,7 +124,9 @@ renderComingSoon(comingSoonTracks);
 }
 
 
-function setupFeaturedTrack(track) {
+function setupFeaturedTrack(
+  track
+) {
 
   const artwork =
     track.artworkUrl
@@ -218,7 +159,12 @@ function setupFeaturedTrack(track) {
 
       <p>
         ${escapeHtml(track.artist)}
-        ${track.genre ? " · " + escapeHtml(track.genre) : ""}
+        ${
+          track.genre
+            ? " · " +
+              escapeHtml(track.genre)
+            : ""
+        }
       </p>
 
       <button
@@ -235,60 +181,151 @@ function setupFeaturedTrack(track) {
 }
 
 
-function renderTracks(releasedTracks) {
+function renderTracks(
+  releasedTracks
+) {
+
+  if (
+    !releasedTracks.length
+  ) {
+
+    tracksBox.innerHTML = `
+      <div class="empty">
+        No released music yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
 
   tracksBox.innerHTML =
-    releasedtracks.map(track => {
+    releasedTracks
+      .map(track => {
 
-      const artwork =
-        track.artworkUrl
-          ? `
-            <img
-              src="${track.artworkUrl}"
-              alt="${escapeHtml(track.title)}"
+        const artwork =
+          track.artworkUrl
+            ? `
+              <img
+                src="${track.artworkUrl}"
+                alt="${escapeHtml(track.title)}"
+              >
+            `
+            : `
+              <span>KXMS</span>
+            `;
+
+
+        return `
+
+          <article class="card">
+
+            <div class="cover">
+              ${artwork}
+            </div>
+
+            <h3>
+              ${escapeHtml(track.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(track.artist)}
+            </p>
+
+            <button
+              onclick="playTrack('${track.id}')"
             >
-          `
-          : `
-            <span>KXMS</span>
-          `;
+              ▶ Play
+            </button>
 
+          </article>
 
-      return `
+        `;
 
-        <article class="card">
-
-          <div class="cover">
-            ${artwork}
-          </div>
-
-          <h3>
-            ${escapeHtml(track.title)}
-          </h3>
-
-          <p>
-            ${escapeHtml(track.artist)}
-          </p>
-
-          <button
-            onclick="playTrack('${track.id}')"
-          >
-            ▶ Play
-          </button>
-
-        </article>
-
-      `;
-
-    }).join("");
+      })
+      .join("");
 
 }
 
 
-function playTrack(id) {
+function renderComingSoon(
+  upcomingTracks
+) {
+
+  if (
+    !upcomingTracks.length
+  ) {
+
+    comingSoonSection.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  comingSoonSection.style.display =
+    "block";
+
+
+  comingSoonBox.innerHTML =
+    upcomingTracks
+      .map(track => {
+
+        const artwork =
+          track.artworkUrl
+            ? `
+              <img
+                src="${track.artworkUrl}"
+                alt="${escapeHtml(track.title)}"
+              >
+            `
+            : `
+              <span>KXMS</span>
+            `;
+
+
+        return `
+
+          <article class="card">
+
+            <div class="cover">
+              ${artwork}
+            </div>
+
+            <h3>
+              ${escapeHtml(track.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(track.artist)}
+            </p>
+
+            <button
+              onclick="playTrack('${track.id}')"
+            >
+              ▶ Preview
+            </button>
+
+          </article>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+function playTrack(
+  id
+) {
 
   const track =
     tracks.find(
-      item => item.id === id
+      item =>
+        item.id === id
     );
 
 
@@ -335,9 +372,13 @@ function playTrack(id) {
 }
 
 
-function escapeHtml(value) {
+function escapeHtml(
+  value
+) {
 
-  return String(value || "").replace(
+  return String(
+    value || ""
+  ).replace(
     /[&<>"']/g,
 
     character => ({
