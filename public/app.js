@@ -83,9 +83,61 @@ const comingSoonTracks =
     }
 
 
-    setupFeaturedTrack(tracks[0]);
+    setupFeaturedTrack(releasedTracks[0]);
 
-    renderTracks();
+    
+renderTracks(releasedTracks);
+    function renderComingSoon(upcomingTracks) {
+
+  if (!upcomingTracks.length) {
+    comingSoonSection.style.display = "none";
+    return;
+  }
+
+  comingSoonSection.style.display = "block";
+
+  comingSoonBox.innerHTML =
+    upcomingTracks.map(track => {
+
+      const artwork =
+        track.artworkUrl
+          ? `
+            <img
+              src="${track.artworkUrl}"
+              alt="${escapeHtml(track.title)}"
+            >
+          `
+          : `
+            <span>KXMS</span>
+          `;
+
+      return `
+        <article class="card">
+
+          <div class="cover">
+            ${artwork}
+          </div>
+
+          <h3>
+            ${escapeHtml(track.title)}
+          </h3>
+
+          <p>
+            ${escapeHtml(track.artist)}
+          </p>
+
+          <button
+            onclick="playTrack('${track.id}')"
+          >
+            ▶ Preview
+          </button>
+
+        </article>
+      `;
+
+    }).join("");
+}
+    renderComingSoon(ComingSoonTracks);
 
   } catch (error) {
 
@@ -154,10 +206,10 @@ function setupFeaturedTrack(track) {
 }
 
 
-function renderTracks() {
+function renderTracks(releasedTracks) {
 
   tracksBox.innerHTML =
-    tracks.map(track => {
+    releasedtracks.map(track => {
 
       const artwork =
         track.artworkUrl
