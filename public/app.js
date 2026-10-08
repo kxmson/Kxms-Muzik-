@@ -27,6 +27,17 @@ async function loadTracks() {
 
     tracks =
       await response.json();
+    const releasedTracks =
+  tracks.filter(
+    track =>
+      track.status !== "coming-soon"
+  );
+
+const comingSoonTracks =
+  tracks.filter(
+    track =>
+      track.status === "coming-soon"
+  );
 
 
     count.textContent =
