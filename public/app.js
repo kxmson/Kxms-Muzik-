@@ -82,12 +82,41 @@ const comingSoonTracks =
       return;
     }
 
+if (releasedTracks.length > 0) {
 
-    setupFeaturedTrack(releasedTracks[0]);
+  setupFeaturedTrack(
+    releasedTracks[0]
+  );
 
-    
+} else {
+
+  featured.innerHTML = `
+    <div class="featured-cover">
+      <span>KXMS</span>
+    </div>
+
+    <div class="featured-info">
+
+      <p class="eyebrow">
+        COMING SOON
+      </p>
+
+      <h2>
+        Upcoming Music
+      </h2>
+
+      <p>
+        New KXMS music is on the way.
+      </p>
+
+    </div>
+  `;
+
+}
+
 renderTracks(releasedTracks);
-    function renderComingSoon(upcomingTracks) {
+
+renderComingSoon(comingSoonTracks);
 
   if (!upcomingTracks.length) {
     comingSoonSection.style.display = "none";
