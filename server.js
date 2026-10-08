@@ -219,16 +219,23 @@ app.post(
         "Untitled",
 
       artist:
-        req.body.artist ||
-        "KXMS",
+         req.body.artist ||
+
+  "KXMS",
+  
 
       genre:
         req.body.genre ||
         "Afrobeats",
 
-      releaseDate:
-        req.body.releaseDate ||
-        "",
+      status: 
+        req.body.status === "coming-soon"
+
+    ? "coming-soon"
+
+    : "released",
+        
+
 
       description:
         req.body.description ||
