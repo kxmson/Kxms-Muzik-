@@ -9,6 +9,11 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <meta
+    name="description"
+    content="Official KXMS music. Listen to the latest releases."
+  >
+
   <title>KXMS — Official Music</title>
 
   <link
@@ -19,14 +24,17 @@
 
 <body>
 
-  <header class="header">
+  <header class="site-header">
 
-    <div class="logo">
+    <a
+      class="logo"
+      href="/"
+    >
       KXMS
-    </div>
+    </a>
 
     <nav>
-      <a href="/">Music</a>
+      <a href="#music">Music</a>
       <a href="/admin.html">Admin</a>
     </nav>
 
@@ -35,27 +43,105 @@
 
   <main>
 
+    <!-- HERO -->
+
     <section class="hero">
 
-      <p class="eyebrow">
-        OFFICIAL MUSIC
-      </p>
+      <div class="hero-content">
 
-      <h1>KXMS</h1>
+        <p class="eyebrow">
+          OFFICIAL ARTIST WEBSITE
+        </p>
 
-      <p>
-        Listen to the latest music directly
-        from KXMS.
-      </p>
+        <h1>
+          KXMS
+        </h1>
+
+        <p class="hero-text">
+          Listen to the latest music directly
+          from KXMS.
+        </p>
+
+        <a
+          href="#music"
+          class="hero-button"
+        >
+          EXPLORE MUSIC
+        </a>
+
+      </div>
 
     </section>
 
 
-    <section class="music-section">
+    <!-- LATEST RELEASE -->
 
-      <div class="section-header">
+    <section
+      id="latest"
+      class="latest-section"
+    >
 
-        <h2>Music</h2>
+      <div class="section-label">
+        LATEST RELEASE
+      </div>
+
+      <div
+        id="featured"
+        class="featured"
+      >
+
+        <div class="featured-cover">
+          <span>KXMS</span>
+        </div>
+
+        <div class="featured-info">
+
+          <p class="eyebrow">
+            NOW AVAILABLE
+          </p>
+
+          <h2>
+            Loading...
+          </h2>
+
+          <p>
+            Loading latest release...
+          </p>
+
+          <button
+            class="play-main"
+            id="featuredPlay"
+          >
+            ▶ PLAY
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MUSIC -->
+
+    <section
+      id="music"
+      class="music-section"
+    >
+
+      <div class="section-heading">
+
+        <div>
+
+          <p class="eyebrow">
+            KXMS
+          </p>
+
+          <h2>
+            Music
+          </h2>
+
+        </div>
 
         <span id="count">
           Loading...
@@ -71,20 +157,47 @@
 
     </section>
 
+
+    <!-- FOOTER -->
+
+    <footer>
+
+      <div class="footer-logo">
+        KXMS
+      </div>
+
+      <p>
+        Official music website.
+      </p>
+
+      <p class="copyright">
+        © KXMS
+      </p>
+
+    </footer>
+
   </main>
 
 
+  <!-- MUSIC PLAYER -->
+
   <div class="player">
 
-    <div class="current-track">
+    <div class="player-info">
 
-      <strong id="now">
+      <div
+        id="playerTitle"
+        class="player-title"
+      >
         Select a song
-      </strong>
+      </div>
 
-      <small id="artist">
+      <div
+        id="playerArtist"
+        class="player-artist"
+      >
         KXMS
-      </small>
+      </div>
 
     </div>
 
