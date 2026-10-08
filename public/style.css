@@ -411,3 +411,28 @@ footer p {
   }
 
 }
+.about-section {
+  max-width: 1250px;
+  margin: auto;
+  padding: 110px 6vw;
+  border-top: 1px solid #202024;
+}
+
+.about-content {
+  max-width: 760px;
+}
+
+.about-content h2 {
+  margin: 0 0 25px;
+  font-size: clamp(55px, 9vw, 110px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.about-content p:not(.eyebrow) {
+  max-width: 650px;
+  margin: 0;
+  color: #999;
+  font-size: 19px;
+  line-height: 1.7;
+}
