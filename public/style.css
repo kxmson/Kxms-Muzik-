@@ -497,3 +497,74 @@ footer p {
     font-size: 12px;
   }
 }
+
+/* KXMS — Premium Afrobeats Finish */
+
+:root {
+  --kxms-black: #080809;
+  --kxms-amber: #f28c28;
+  --kxms-silver: #c5c5c5;
+}
+
+.hero {
+  background:
+    radial-gradient(
+      ellipse at 78% 40%,
+      rgba(242, 140, 40, 0.13),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 20% 70%,
+      rgba(255, 255, 255, 0.035),
+      transparent 45%
+    ),
+    var(--kxms-black);
+}
+
+.hero-button {
+  border: 1px solid var(--kxms-amber);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hero-button:hover {
+  background: var(--kxms-amber);
+  color: #080809;
+  transform: translateY(-2px);
+}
+
+.play-main {
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.play-main:hover {
+  background: var(--kxms-amber);
+  transform: translateY(-2px);
+}
+
+.card {
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.card:hover {
+  border-color: rgba(242, 140, 40, 0.55);
+}
+
+.social-link:hover {
+  color: var(--kxms-amber);
+}
+
+.social-link:hover span {
+  color: var(--kxms-amber);
+}
+
+::selection {
+  background: var(--kxms-amber);
+  color: #080809;
+}
