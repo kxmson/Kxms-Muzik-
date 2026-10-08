@@ -1,4 +1,8 @@
 const tracksBox = document.getElementById("tracks");
+const comingSoonBox =
+  document.getElementById("comingSoon");
+const comingSoonSection =
+  document.getElementById("comingSoonSection");
 const audio = document.getElementById("audio");
 const count = document.getElementById("count");
 
