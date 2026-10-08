@@ -10,7 +10,157 @@
     * {
       box-sizing: border-box;
     }
+<section class="admin-library">
 
+  <h2>Release Library</h2>
+
+  <p>
+    Manage released and upcoming KXMS music.
+  </p>
+
+  <div id="adminTracks">
+    Loading releases...
+  </div>
+
+</section>
+
+<script>
+
+async function loadAdminTracks() {
+
+  const password =
+    document.querySelector(
+      'input[name="password"]'
+    ).value;
+
+  if (!password) {
+    return;
+  }
+
+  const response =
+    await fetch(
+      "/api/admin/tracks",
+      {
+        headers: {
+          "Authorization":
+            "Bearer " + password
+        }
+      }
+    );
+
+  if (!response.ok) {
+    return;
+  }
+
+  const tracks =
+    await response.json();
+
+  const box =
+    document.getElementById(
+      "adminTracks"
+    );
+
+  if (!tracks.length) {
+
+    box.innerHTML =
+      "<p>No releases yet.</p>";
+
+    return;
+  }
+
+  box.innerHTML =
+    tracks.map(track => {
+
+      const status =
+        track.status === "coming-soon"
+          ? "Coming Soon"
+          : "Released";
+
+      return `
+        <div class="admin-track">
+
+          <strong>
+            ${track.title}
+          </strong>
+
+          <span>
+            ${track.artist}
+          </span>
+
+          <span>
+            ${status}
+          </span>
+
+          <button
+            type="button"
+            onclick="changeStatus('${track.id}', '${track.status === "coming-soon" ? "released" : "coming-soon"}')"
+          >
+            Change to ${
+              track.status === "coming-soon"
+                ? "Released"
+                : "Coming Soon"
+            }
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+async function changeStatus(
+  id,
+  status
+) {
+
+  const password =
+    document.querySelector(
+      'input[name="password"]'
+    ).value;
+
+  const response =
+    await fetch(
+      `/api/admin/tracks/${id}/status`,
+      {
+        method: "PATCH",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          "Authorization":
+            "Bearer " + password
+        },
+
+        body:
+          JSON.stringify({
+            status
+          })
+      }
+    );
+
+  if (!response.ok) {
+
+    alert(
+      "Could not change release status."
+    );
+
+    return;
+  }
+
+  await loadAdminTracks();
+
+  alert(
+    status === "coming-soon"
+      ? "Moved to Coming Soon."
+      : "Marked as Released."
+  );
+
+}
+
+</script>
     body {
       margin: 0;
       background: #0b0b0d;
