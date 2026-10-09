@@ -220,9 +220,15 @@
             placeholder="Tell listeners about this release"></textarea>
         </label>
 
-        <label>Audio File
-          <input type="file" name="audio" accept="audio/*" required>
-        </label>
+        <label for="audioFile">Audio File (MP3, WAV, or M4A)
+  <input
+    id="audioFile"
+    type="file"
+    name="audio"
+    accept=".mp3,.wav,.m4a,audio/mpeg,audio/wav,audio/x-wav,audio/mp4,audio/aac"
+    required
+  >
+</label>```
 
         <label>Cover Artwork
           <input type="file" name="artwork" accept="image/*">
