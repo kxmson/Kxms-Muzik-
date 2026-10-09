@@ -1,468 +1,417 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080809">
   <title>KXMS — Music Admin</title>
 
   <style>
-    * {
-      box-sizing: border-box;
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #080809;
+      --panel: #121214;
+      --line: #29292d;
+      --muted: #999;
+      --accent: #f28c28;
     }
-<section class="admin-library">
 
-  <h2>Release Library</h2>
-
-  <p>
-    Manage released and upcoming KXMS music.
-  </p>
-
-  <div id="adminTracks">
-    Loading releases...
-  </div>
-
-</section>
-
-<script>
-
-async function loadAdminTracks() {
-
-  const password =
-    document.querySelector(
-      'input[name="password"]'
-    ).value;
-
-  if (!password) {
-    return;
-  }
-
-  const response =
-    await fetch(
-      "/api/admin/tracks",
-      {
-        headers: {
-          "Authorization":
-            "Bearer " + password
-        }
-      }
-    );
-
-  if (!response.ok) {
-    return;
-  }
-
-  const tracks =
-    await response.json();
-
-  const box =
-    document.getElementById(
-      "adminTracks"
-    );
-
-  if (!tracks.length) {
-
-    box.innerHTML =
-      "<p>No releases yet.</p>";
-
-    return;
-  }
-
-  box.innerHTML =
-    tracks.map(track => {
-
-      const status =
-        track.status === "coming-soon"
-          ? "Coming Soon"
-          : "Released";
-
-      return `
-        <div class="admin-track">
-
-          <strong>
-            ${track.title}
-          </strong>
-
-          <span>
-            ${track.artist}
-          </span>
-
-          <span>
-            ${status}
-          </span>
-
-          <button
-            type="button"
-            onclick="changeStatus('${track.id}', '${track.status === "coming-soon" ? "released" : "coming-soon"}')"
-          >
-            Change to ${
-              track.status === "coming-soon"
-                ? "Released"
-                : "Coming Soon"
-            }
-          </button>
-
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-
-async function changeStatus(
-  id,
-  status
-) {
-
-  const password =
-    document.querySelector(
-      'input[name="password"]'
-    ).value;
-
-  const response =
-    await fetch(
-      `/api/admin/tracks/${id}/status`,
-      {
-        method: "PATCH",
-
-        headers: {
-          "Content-Type":
-            "application/json",
-
-          "Authorization":
-            "Bearer " + password
-        },
-
-        body:
-          JSON.stringify({
-            status
-          })
-      }
-    );
-
-  if (!response.ok) {
-
-    alert(
-      "Could not change release status."
-    );
-
-    return;
-  }
-
-  await loadAdminTracks();
-
-  alert(
-    status === "coming-soon"
-      ? "Moved to Coming Soon."
-      : "Marked as Released."
-  );
-
-}
-
-</script>
     body {
       margin: 0;
-      background: #0b0b0d;
-      color: white;
+      background: var(--bg);
+      color: #fff;
       font-family: Arial, Helvetica, sans-serif;
-      padding-bottom: 60px;
     }
 
-    .header {
-      height: 72px;
-      border-bottom: 1px solid #222;
+    header {
+      min-height: 72px;
+      padding: 16px 6vw;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 0 6vw;
-      background: #0b0b0d;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
     }
 
     .logo {
-      font-weight: 900;
-      letter-spacing: 0.2em;
       font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .2em;
     }
 
-    .header a {
-      color: #aaa;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 60px 6vw;
+    header a, .back { color: var(--muted); }
+
+    main {
+      width: min(850px, 100%);
+      margin: auto;
+      padding: 45px 6vw 100px;
     }
 
     .eyebrow {
-      color: #888;
-      font-size: 12px;
-      letter-spacing: 0.25em;
-      font-weight: bold;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .22em;
     }
 
     h1 {
-      font-size: 48px;
-      margin: 15px 0 10px;
+      margin: 12px 0;
+      font-size: clamp(36px, 8vw, 56px);
     }
 
-    .intro {
-      color: #999;
-      margin-bottom: 40px;
+    h2 { margin-top: 0; }
+
+    .intro, .muted {
+      color: var(--muted);
+      line-height: 1.6;
     }
 
-    form {
-      display: grid;
-      gap: 20px;
+    .panel {
+      margin-top: 28px;
+      padding: 24px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
     }
+
+    form { display: grid; gap: 18px; }
 
     label {
       display: block;
-      color: #aaa;
-      font-size: 14px;
-      font-weight: bold;
+      color: #c5c5c5;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    input,
-    textarea {
+    input, textarea, select {
       display: block;
       width: 100%;
       margin-top: 8px;
-      padding: 14px;
-      border: 1px solid #292929;
+      padding: 13px;
+      border: 1px solid var(--line);
       border-radius: 8px;
-      background: #151518;
+      background: #09090b;
       color: white;
-      font-size: 16px;
+      font: inherit;
     }
 
-    input[type="file"] {
-      padding: 12px;
-      color: #aaa;
-    }
+    input[type="file"] { font-size: 13px; }
 
     textarea {
-      min-height: 120px;
+      min-height: 100px;
       resize: vertical;
     }
 
     button {
-      width: 100%;
-      padding: 16px;
-      border: 0;
+      padding: 13px 16px;
+      border: 1px solid var(--accent);
       border-radius: 8px;
-      background: white;
-      color: black;
-      font-size: 16px;
+      background: var(--accent);
+      color: #080809;
       font-weight: 800;
       cursor: pointer;
     }
 
-    button:disabled {
-      opacity: 0.5;
+    button:disabled { opacity: .5; cursor: wait; }
+
+    .secondary {
+      background: transparent;
+      color: white;
+      border-color: var(--line);
     }
 
     #message {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      background: #151518;
-      color: #aaa;
       display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #202024;
+      overflow-wrap: anywhere;
     }
+
+    .track {
+      display: grid;
+      gap: 10px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .track-title { font-weight: 800; font-size: 17px; }
+    .track-meta { color: var(--muted); font-size: 13px; }
+
+    .track-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .track-actions button { flex: 1; }
 
     .back {
       display: inline-block;
       margin-top: 30px;
-      color: #888;
-      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .panel { padding: 17px; }
+      .track-actions { flex-direction: column; }
     }
   </style>
 </head>
 
 <body>
-
-  <header class="header">
+  <header>
     <div class="logo">KXMS</div>
-    <a href="/">Music</a>
+    <a href="/">View Website ↗</a>
   </header>
 
-  <main class="container">
-
-    <div class="eyebrow">
-      PRIVATE ADMIN
-    </div>
-
-    <h1>Upload Music</h1>
-
+  <main>
+    <div class="eyebrow">PRIVATE ADMINISTRATION</div>
+    <h1>Music Manager</h1>
     <p class="intro">
-      Add a new release to the KXMS music website.
+      Upload releases and manage the KXMS music library.
+      Keep your admin password private.
     </p>
 
-    <form id="uploadForm">
-
-      <label>
-        Admin Password
-        <input
-          type="password"
-          id="password"
-          required
-        >
-      </label>
-
-      <label>
-        Song Title
-        <input
-          type="text"
-          name="title"
-          placeholder="Enter song title"
-          required
-          <label>
-  Release Status
-
-  <select name="status">
-    <option value="released">
-      Released
-    </option>
-
-    <option value="coming-soon">
-      Coming Soon
-    </option>
-  </select>
-</label>
-        >
-      </label>
-
-      <label>
-        Artist
-        <input
-          type="text"
-          name="artist"
-          value="KXMS"
-          required
-        >
-      </label>
-
-      <label>
-        Genre
-        <input
-          type="text"
-          name="genre"
-          value="Afrobeats"
-        >
-      </label>
-
-      <label>
-        Release Date
-        <input
-          type="date"
-          name="releaseDate"
-        >
-      </label>
-
-      <label>
-        Description
-        <textarea
-          name="description"
-          placeholder="Tell listeners about this release..."
-        ></textarea>
-      </label>
-
-      <label>
-        Audio File
-        <input
-          type="file"
-          name="audio"
-          required
-        >
-      </label>
-
-      <label>
-        Cover Artwork
-        <input
-          type="file"
-          name="artwork"
-        >
-      </label>
-
-      <button
-        type="submit"
-        id="uploadButton"
-      >
-        Upload Release
+    <section class="panel">
+      <h2>Admin Access</h2>
+      <label for="password">Admin Password</label>
+      <input id="password" type="password"
+        autocomplete="current-password"
+        placeholder="Enter admin password">
+      <button id="loadButton" type="button" style="margin-top:12px">
+        Load Release Library
       </button>
+    </section>
 
-    </form>
+    <section class="panel">
+      <h2>Upload a Release</h2>
 
-    <div id="message"></div>
+      <form id="uploadForm">
+        <label>Song Title
+          <input name="title" required
+            placeholder="Enter song title">
+        </label>
 
-    <a class="back" href="/">
-      ← Back to KXMS Music
-    </a>
+        <label>Artist
+          <input name="artist" value="KXMS" required>
+        </label>
 
+        <label>Genre
+          <input name="genre" value="Afrobeats">
+        </label>
+
+        <label>Release Status
+          <select name="status">
+            <option value="released">Released</option>
+            <option value="coming-soon">Coming Soon</option>
+          </select>
+        </label>
+
+        <label>Release Date
+          <input type="date" name="releaseDate">
+        </label>
+
+        <label>Description
+          <textarea name="description"
+            placeholder="Tell listeners about this release"></textarea>
+        </label>
+
+        <label>Audio File
+          <input type="file" name="audio" accept="audio/*" required>
+        </label>
+
+        <label>Cover Artwork
+          <input type="file" name="artwork" accept="image/*">
+        </label>
+
+        <button id="uploadButton" type="submit">
+          Upload Release
+        </button>
+      </form>
+
+      <div id="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Release Library</h2>
+      <p class="muted">Manage released and upcoming KXMS music.</p>
+      <div id="adminTracks" class="muted">
+        Enter your admin password and load the library.
+      </div>
+    </section>
+
+    <a class="back" href="/">← Back to KXMS Music</a>
   </main>
 
   <script>
     const form = document.getElementById("uploadForm");
+    const passwordInput = document.getElementById("password");
     const message = document.getElementById("message");
-    const button = document.getElementById("uploadButton");
+    const uploadButton = document.getElementById("uploadButton");
+    const loadButton = document.getElementById("loadButton");
+    const tracksBox = document.getElementById("adminTracks");
 
-    form.addEventListener("submit", async function(event) {
+    function getPassword() {
+      return passwordInput.value.trim();
+    }
 
-      event.preventDefault();
-
+    function showMessage(text) {
       message.style.display = "block";
-      message.textContent = "Uploading...";
-      button.disabled = true;
+      message.textContent = text;
+    }
 
-      const password =
-        document.getElementById("password").value;
+    async function api(url, options = {}) {
+      const headers = {
+        ...(options.headers || {}),
+        "Authorization": "Bearer " + getPassword()
+      };
 
-      const formData =
-        new FormData(form);
+      const response = await fetch(url, { ...options, headers });
+      const data = await response.json().catch(() => ({}));
 
-      try {
-
-        const response = await fetch(
-          "/api/admin/upload",
-          {
-            method: "POST",
-            headers: {
-              "Authorization": "Bearer " + password
-            },
-            body: formData
-          }
-        );
-
-        const data =
-          await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.error || "Upload failed"
-          );
-        }
-
-        message.textContent =
-          "✓ Release uploaded successfully!";
-
-        form.reset();
-
-      } catch (error) {
-
-        message.textContent =
-          "Error: " + error.message;
-
-      } finally {
-
-        button.disabled = false;
-
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed (${response.status})`);
       }
 
+      return data;
+    }
+
+    async function loadAdminTracks() {
+      if (!getPassword()) {
+        showMessage("Enter your admin password first.");
+        return;
+      }
+
+      loadButton.disabled = true;
+      tracksBox.textContent = "Loading releases...";
+
+      try {
+        const tracks = await api("/api/admin/tracks");
+        tracksBox.replaceChildren();
+
+        if (!tracks.length) {
+          tracksBox.textContent = "No releases yet. Upload your first song above.";
+          return;
+        }
+
+        tracks.forEach(track => {
+          const item = document.createElement("article");
+          item.className = "track";
+
+          const title = document.createElement("div");
+          title.className = "track-title";
+          title.textContent = track.title || "Untitled";
+
+          const artist = document.createElement("div");
+          artist.className = "track-meta";
+          artist.textContent = track.artist || "KXMS";
+
+          const status = document.createElement("div");
+          status.className = "track-meta";
+          status.textContent =
+            track.status === "coming-soon" ? "Coming Soon" : "Released";
+
+          const actions = document.createElement("div");
+          actions.className = "track-actions";
+
+          const statusButton = document.createElement("button");
+          statusButton.className = "secondary";
+          statusButton.textContent =
+            track.status === "coming-soon"
+              ? "Mark as Released"
+              : "Move to Coming Soon";
+
+          statusButton.addEventListener("click", async () => {
+            statusButton.disabled = true;
+            try {
+              const nextStatus =
+                track.status === "coming-soon" ? "released" : "coming-soon";
+
+              await api(`/api/admin/tracks/${encodeURIComponent(track.id)}/status`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: nextStatus })
+              });
+
+              await loadAdminTracks();
+              showMessage("Release status updated.");
+            } catch (error) {
+              showMessage(error.message);
+            } finally {
+              statusButton.disabled = false;
+            }
+          });
+
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "secondary";
+          deleteButton.textContent = "Delete Release";
+
+          deleteButton.addEventListener("click", async () => {
+            if (!confirm(`Delete "${track.title}" from the release library?`)) return;
+
+            deleteButton.disabled = true;
+            try {
+              await api(`/api/admin/tracks/${encodeURIComponent(track.id)}`, {
+                method: "DELETE"
+              });
+
+              await loadAdminTracks();
+              showMessage("Release removed from the library.");
+            } catch (error) {
+              showMessage(error.message);
+              deleteButton.disabled = false;
+            }
+          });
+
+          actions.append(statusButton, deleteButton);
+          item.append(title, artist, status, actions);
+          tracksBox.append(item);
+        });
+      } catch (error) {
+        tracksBox.textContent = "Could not load releases.";
+        showMessage(error.message);
+      } finally {
+        loadButton.disabled = false;
+      }
+    }
+
+    loadButton.addEventListener("click", loadAdminTracks);
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!getPassword()) {
+        showMessage("Enter your admin password first.");
+        return;
+      }
+
+      uploadButton.disabled = true;
+      showMessage("Uploading release...");
+
+      try {
+        const formData = new FormData(form);
+
+        await api("/api/admin/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        showMessage("Release uploaded successfully.");
+        form.reset();
+        form.elements.artist.value = "KXMS";
+        form.elements.genre.value = "Afrobeats";
+
+        await loadAdminTracks();
+      } catch (error) {
+        showMessage("Upload failed: " + error.message);
+      } finally {
+        uploadButton.disabled = false;
+      }
     });
   </script>
-
 </body>
 </html>
