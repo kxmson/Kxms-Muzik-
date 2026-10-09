@@ -338,6 +338,25 @@ app.delete("/api/admin/tracks/:id", adminAuth, async (req, res) => {
   }
 });
 
+app.get("/debug-r2-https", async (req, res) => {
+  try {
+    const response = await fetch(process.env.R2_ENDPOINT);
+
+    res.status(200).json({
+      httpsConnected: true,
+      status: response.status
+    });
+  } catch (err) {
+    console.error("R2 HTTPS diagnostic:", err);
+
+    res.status(502).json({
+      httpsConnected: false,
+      error: err.cause?.code || err.code || err.name,
+      message: err.cause?.message || err.message
+    });
+  }
+});
+
 app.get("/*splat", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
