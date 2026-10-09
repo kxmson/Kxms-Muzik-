@@ -2,10 +2,12 @@
 const express = require("express");
 const multer = require("multer");
 const {
+  const {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
-  DeleteObjectCommand
+  DeleteObjectCommand,
+  HeadBucketCommand
 } = require("@aws-sdk/client-s3");
 
 const path = require("path");
@@ -353,6 +355,31 @@ app.get("/debug-r2-https", async (req, res) => {
       httpsConnected: false,
       error: err.cause?.code || err.code || err.name,
       message: err.cause?.message || err.message
+    });
+  }
+});
+
+app.get("/debug-r2-s3", async (req, res) => {
+  try {
+    await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+
+    res.json({
+      s3Connected: true,
+      bucketAccess: true
+    });
+  } catch (error) {
+    console.error("R2 S3 diagnostic failed:", {
+      name: error.name,
+      code: error.Code || error.code,
+      message: error.message,
+      status: error.$metadata?.httpStatusCode
+    });
+
+    res.status(502).json({
+      s3Connected: false,
+      error: error.name,
+      code: error.Code || error.code || null,
+      status: error.$metadata?.httpStatusCode || null
     });
   }
 });
