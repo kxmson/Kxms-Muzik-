@@ -359,29 +359,29 @@ app.get("/debug-r2-https", async (req, res) => {
   }
 });
 
-app.get("/debug-r2-s3", async (req, res) => {
-  try {
-    await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+try {
+  const body = error.$response?.body;
 
-    res.json({
-      s3Connected: true,
-      bucketAccess: true
-    });
-  } catch (error) {
-    console.error("R2 S3 diagnostic failed:", {
-      name: error.name,
-      code: error.Code || error.code,
-      message: error.message,
-      status: error.$metadata?.httpStatusCode
-    });
-
-    res.status(502).json({
-      s3Connected: false,
-      error: error.name,
-      code: error.Code || error.code || null,
-      status: error.$metadata?.httpStatusCode || null
-    });
+  if (body && typeof body[Symbol.asyncIterator] === "function") {
+    for await (const chunk of body) {
+      responseBody += chunk.toString();
+    }
   }
+} catch (_) {}
+
+console.error("R2 detailed diagnostic:", {
+  name: error.name,
+  message: error.message,
+  status: error.$metadata?.httpStatusCode,
+  requestId: error.$metadata?.requestId,
+  responseBody: responseBody.slice(0, 2000)
+});
+
+res.status(502).json({
+  s3Connected: false,
+  status: error.$metadata?.httpStatusCode || null,
+  requestId: error.$metadata?.requestId || null,
+  details: responseBody.slice(0, 1000) || "No response body available"
 });
 
 app.get("/*splat", (req, res) => {
