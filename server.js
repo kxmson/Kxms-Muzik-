@@ -359,30 +359,31 @@ app.get("/debug-r2-https", async (req, res) => {
   }
 });
 
-try {
-  const body = error.$response?.body;
 
-  if (body && typeof body[Symbol.asyncIterator] === "function") {
-    for await (const chunk of body) {
-      responseBody += chunk.toString();
-    }
+app.get("/debug-r2-s3", async (req, res) => {
+  try {
+    await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+
+    res.json({
+      s3Connected: true,
+      bucketAccess: true
+    });
+  } catch (error) {
+    console.error("R2 S3 diagnostic:", {
+      name: error.name,
+      message: error.message,
+      status: error.$metadata?.httpStatusCode,
+      requestId: error.$metadata?.requestId
+    });
+
+    res.status(502).json({
+      s3Connected: false,
+      status: error.$metadata?.httpStatusCode || null,
+      requestId: error.$metadata?.requestId || null
+    });
   }
-} catch (_) {}
-
-console.error("R2 detailed diagnostic:", {
-  name: error.name,
-  message: error.message,
-  status: error.$metadata?.httpStatusCode,
-  requestId: error.$metadata?.requestId,
-  responseBody: responseBody.slice(0, 2000)
 });
 
-res.status(502).json({
-  s3Connected: false,
-  status: error.$metadata?.httpStatusCode || null,
-  requestId: error.$metadata?.requestId || null,
-  details: responseBody.slice(0, 1000) || "No response body available"
-});
 
 app.get("/*splat", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
