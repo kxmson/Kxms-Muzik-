@@ -360,29 +360,53 @@ app.get("/debug-r2-https", async (req, res) => {
 });
 
 
+
 app.get("/debug-r2-s3", async (req, res) => {
+  const key = "data/kxms-r2-connection-test-20261010.txt";
+  let stage = "write";
+
   try {
-    await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+    await s3.send(new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: "KXMS R2 connection test"
+    }));
+
+    stage = "read";
+
+    await s3.send(new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: key
+    }));
+
+    stage = "delete";
+
+    await s3.send(new DeleteObjectCommand({
+      Bucket: BUCKET,
+      Key: key
+    }));
 
     res.json({
       s3Connected: true,
-      bucketAccess: true
+      objectReadWriteDelete: true
     });
   } catch (error) {
-    console.error("R2 S3 diagnostic:", {
+    console.error("R2 object test failed:", {
+      stage,
       name: error.name,
       message: error.message,
-      status: error.$metadata?.httpStatusCode,
-      requestId: error.$metadata?.requestId
+      status: error.$metadata?.httpStatusCode
     });
 
     res.status(502).json({
       s3Connected: false,
+      failedAt: stage,
       status: error.$metadata?.httpStatusCode || null,
-      requestId: error.$metadata?.requestId || null
+      error: error.name
     });
   }
 });
+
 
 
 app.get("/*splat", (req, res) => {
