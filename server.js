@@ -391,14 +391,15 @@ app.get("/debug-r2-s3", async (req, res) => {
       objectReadWriteDelete: true
     });
   } catch (error) {
-    console.error("R2 object test failed:", {
-      stage,
-      name: error.name,
-      message: error.message,
-      status: error.$metadata?.httpStatusCode
-    });
-
-    res.status(502).json({
+  console.error("R2 object test failed:", {
+  stage,
+  name: error.name,
+  code: error.Code || error.code || null,
+  message: error.message,
+  status: error.$metadata?.httpStatusCode,
+  requestId: error.$metadata?.requestId || null,
+  extendedRequestId: error.$metadata?.extendedRequestId || null
+});    res.status(502).json({
       s3Connected: false,
       failedAt: stage,
       status: error.$metadata?.httpStatusCode || null,
